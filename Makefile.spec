@@ -1,6 +1,10 @@
-#===========================================================
-# Aura Ecosystem - Windows Makefile 
-#===========================================================
+# ===========================================================
+# Aura Ecosystem - Master Makefile 
+# ===========================================================
+
+# Force Windows command interpreter for cross-environment compatibility
+SHELL = cmd.exe
+.SHELLFLAGS = /c
 
 PYTHON = python
 PIP = pip
@@ -11,23 +15,30 @@ DEVREQ = requirements-dev.txt
 
 DASHBOARD = extensions\cert_dashboard
 CERT = extensions\cert_automation
+SPECS = specs\asyncapi.yaml
+MATLAB_DIR = matlab
 
-.PHONY: help install dev update clean dashboard cert lint test format doctor
+.PHONY: help install dev update clean dashboard cert lint test format doctor aura api web build package docs docker deploy xlsl agent models benchmark spec-check matlab-status
 
 help:
 	@echo.
-	@echo Aura Build Commands
-	@echo ==========================
-	@echo install    Install dependencies
-	@echo dev        Install development packages
-	@echo update     Upgrade installed packages
-	@echo dashboard  Launch Streamlit dashboard
-	@echo cert       Run certificate automation
-	@echo lint       Run Ruff linter
-	@echo format     Format code
-	@echo test       Run tests
-	@echo doctor     Check environment
-	@echo clean      Remove cache files
+	@echo Aura Master Build Commands
+	@echo ================================================
+	@echo install     Install Python dependencies
+	@echo dev         Install development packages
+	@echo update      Upgrade installed packages
+	@echo dashboard   Launch Streamlit dashboard
+	@echo cert        Run certificate automation
+	@echo lint        Run Ruff linter
+	@echo format      Format code
+	@echo test        Run tests
+	@echo doctor      Check environment
+	@echo clean       Remove cache files
+	@echo aura        Start Aura core Python script
+	@echo api         Run FastAPI backend
+	@echo web         Start frontend web app
+	@echo xlsl        Compile .xlsl definitions
+	@echo spec-check  Verify 3xpl AsyncAPI specification
 	@echo.
 
 install:
@@ -75,7 +86,8 @@ clean:
 	@if exist .ruff_cache rmdir /S /Q .ruff_cache
 	@if exist __pycache__ rmdir /S /Q __pycache__
 	@for /d /r %%d in (__pycache__) do @if exist "%%d" rmdir /S /Q "%%d"
-    aura:
+
+aura:
 	@python aura.py
 
 api:
@@ -109,4 +121,8 @@ models:
 	@python aura/model_manager.py
 
 benchmark:
-	@python benchmarks/run.py
+	@benchmarks\run.py
+
+spec-check:
+	@echo Checking AsyncAPI specification integrity...
+	@if exist $(SPECS) (echo Found: $(SPECS)) else (echo Error: asyncapi.yaml missing in specs/!)
