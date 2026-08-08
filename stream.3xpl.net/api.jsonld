@@ -1,4 +1,4 @@
-asyncapi: 2.6.0
+asyncapi: 2.6.0 
 defaultContentType: json
 info:
   title: 3xpl.com Websockets API
