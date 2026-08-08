@@ -435,3 +435,4 @@ components:
         time:
           type: string
           description: Transaction timestamp
+
