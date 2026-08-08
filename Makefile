@@ -111,6 +111,9 @@ docker:
 deploy:
 	@python scripts/deploy.py
 
+orchestrate:
+	@python orchestrate.py
+
 xlsl:
 	@python tools/xlsl_compiler.py
 
