@@ -1,5 +1,5 @@
 # ===========================================================
-# Aura Ecosystem - Master Makefile 
+# Aura Ecosystem - Main Makefile 
 # ===========================================================
 
 # Force Windows command interpreter for cross-environment compatibility
