@@ -1,0 +1,37 @@
+init (sdx, buffersize=1000);   // initialize the SDXF parameter structure sdx
+  create (sdx, ID=INVOICE, datatype=STRUCTURED); // start of the main structure
+  create (sdx, ID=INVOICE_NO, datatype=NUMERIC, value=123456); // create an elementary Chunk
+  create (sdx, ID=DATE, datatype=CHAR, value="2005-06-17"); // once more
+  create (sdx, ID=ADDRESS_SENDER, datatype=STRUCTURED); // Substructure
+  create (sdx, ID=NAME, datatype=CHAR, value="Peter Somebody"); // element. Chunk inside this substructure
+  ...
+  create (sdx, ID= COUNTRY, datatype=CHAR, value="France"); // the last one inside this substructure
+  leave; // closing the substructure ADDRESS_SENDER
+  ...
+  leave; // closing the substructure INVOICE
+
+init (sdx, container=pointer to an SDXF-structure);   // initialize the SDXF parameter structure sdx
+  enter (sdx); // join into the INVOICE structure.
+               //
+  while (sdx.rc == SDX_RC_ok)
+  {
+      switch (sdx. Chunk_ID)
+     {
+         case INVOICE_NO:
+           extract (sdx);    
+           invno = sdx.value;  // the extract function put integer values into the parameter field 'value'
+           break;
+           //
+         case DATE:
+           extract (sdx);    
+           strcpy (invdate, sdx.data); // sdx.data is a pointer to the extracted character string
+           break;
+           //
+         case ADDRESS_SENDER:
+           enter (sdx);  // we use 'enter' because ADDRESS is a structured Chunk
+           do while (sdx.rc == SDX_RC_ok) // inner loop
+            ...
+           break;
+        ...
+     }  
+  }
